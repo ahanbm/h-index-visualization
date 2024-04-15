@@ -1,2 +1,2 @@
 # h-index-visualization
-H-index project
+This project uses pybliometrics (https://github.com/pybliometrics-dev/pybliometrics). 

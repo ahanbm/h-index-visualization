@@ -1,0 +1,6 @@
+.idea
+data
+logs
+dump.json
+config.json
+exampleProg.py
