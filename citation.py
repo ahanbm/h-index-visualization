@@ -9,7 +9,7 @@ def analyze(auth):
   end = start_end[1]
 
   docs = auth.get_documents()
-  
+
   dates = []
 
   for doc in docs:
@@ -17,6 +17,11 @@ def analyze(auth):
 
   for i in range(len(dates)):
     dates[i] = int(dates[i][:4])
+
+  sorted_indexes = sorted(range(len(dates)), key=lambda x: -1 * dates[x])
+
+  docs = [docs[i] for i in sorted_indexes]
+  dates = [dates[i] for i in sorted_indexes]
   
   current_year = start
   index = len(dates) - 1

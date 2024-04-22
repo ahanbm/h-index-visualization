@@ -10,10 +10,12 @@ def sanitize(s):
     return "N/A"
 
 def process(text, prefix):
-  if text == "n" or text == "'n'":
-    return None
-  else:
+  text = text.strip()
+  
+  if text:
     return prefix + "(" + text + ")"
+  else:
+    return None
   
 def print_info(info, num):
   print("Author " + str(num))
@@ -22,7 +24,7 @@ def print_info(info, num):
   print()
 
 def get_search():
-  print("On the commands below, type 'n' to skip")
+  print("On the three upcoming commands, enter to skip")
 
   first = input("First name of author: ")
   last = input("Last name of author: ")
@@ -60,7 +62,7 @@ def print_authors(authors):
     print_info(info, num)
     num = num + 1 
 
-def get_index():
+def get_index(authors):
   val = 0
 
   while True:
@@ -81,7 +83,7 @@ def get_index():
   
   return val
 
-if __name__ == "__main__":
+def end_to_end():
   search_keys = get_search()
   search_texts = ["AUTHFIRST", "AUTHLAST", "AFFIL"]
 
@@ -96,7 +98,7 @@ if __name__ == "__main__":
     sys.exit(1)
 
   print_authors(authors)
-  au = authors[int(get_index()) - 1]
+  au = authors[int(get_index(authors)) - 1]
 
   auth = AuthorRetrieval(au.eid)
   data = citation.analyze(auth)
@@ -114,3 +116,6 @@ if __name__ == "__main__":
   print("\nFile Writing Complete")
   citation.plot_data(data, auth.given_name + " " + auth.surname)
   print("Plotting Complete")
+
+if __name__ == "__main__":
+  end_to_end()
