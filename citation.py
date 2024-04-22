@@ -1,18 +1,8 @@
-from pybliometrics.scopus import AuthorRetrieval
-from pybliometrics.scopus import AuthorSearch
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import bisect
-import time
 
-def timer(func, input):
-  start_time = time.time()
-  func(input)
-  end_time = time.time()  
-
-  return end_time - start_time
-
-def full(auth):
+def analyze(auth):
   start_end = auth.publication_range
 
   start = start_end[0]
@@ -88,13 +78,13 @@ def plot_data(data, name):
     fig = plt.figure(num=name, figsize=(20, 12))
     ax1 = fig.add_subplot()
 
-    ax1.plot(x_values, y_values, 'bo', color='blue')
+    ax1.plot(x_values, y_values, 'bo')
     ax1.plot(x_values, y_values, label='h-index', color='blue')
     ax1.set_xlabel('Year')
     ax1.set_ylabel('h-index', color='blue')
 
     ax2 = ax1.twinx()
-    ax2.plot(x_values, z_values, 'ro', color='red')
+    ax2.plot(x_values, z_values, 'ro')
     ax2.plot(x_values, z_values, label='citations', color='red')
     ax2.set_ylabel('citations', color='red')
 
@@ -110,25 +100,3 @@ def plot_data(data, name):
 
     plt.grid(True)
     plt.show()
-
-if __name__ == "__main__":
-  s = AuthorSearch('AUTHFIRST(Ahan) and AUTHLAST(Mishra)')
-  au = s.authors[0]
-
-  id = au.eid
-  auth = AuthorRetrieval(id)
-
-  data = full(auth)
-
-  with open('output.txt', 'w') as file:
-    for tuple in data:
-      (year, h, cites) = tuple
-
-      file.write(str(year) + " ")
-      file.write(str(h) + " ")
-      file.write(str(cites) + "\n")
-    
-    file.write("Done\n\n")
-
-  print("File Writing Complete")
-  plot_data(data, auth.given_name + " " + auth.surname)
