@@ -1,13 +1,30 @@
 from pybliometrics.scopus import AuthorRetrieval
 from pybliometrics.scopus import AuthorSearch
-import citation
+import citation_historical
+import citation_documents
+import plotter
+import json
 import sys
+import os
+
+def read_author_info(file_path):
+    with open(file_path, 'r') as file:
+        authors = json.load(file)
+        author = authors[0]
+
+        first_name = author.get('author_first_name', "")
+        last_name = author.get('author_last_name', "")
+        affiliation = author.get('author_affiliation', "")
+    
+    return [first_name, last_name, affiliation]
+
 
 def sanitize(s):
   if s:
     return s
   else:
     return "N/A"
+  
 
 def process(text, prefix):
   text = text.strip()
@@ -17,11 +34,13 @@ def process(text, prefix):
   else:
     return None
   
+  
 def print_info(info, num):
   print("Author " + str(num))
   print("Name: " + (info[0] + " " + info[1]) + ", Affiliation: " + info[2])
   print("City: " + info[3] + ", Country: " + info[4] + ", Areas: " + info[5])
   print()
+
 
 def get_search():
   print("On the three upcoming commands, enter to skip")
@@ -32,6 +51,30 @@ def get_search():
 
   return [first, last, affiliation]
 
+
+def get_option_authors():
+  while True:
+    option = input("Would you like to input information through standard input (1) or authors.json (2): ")
+
+    if option == "1":
+        return get_search()
+    elif option == '2':
+        return read_author_info("authors.json")
+    else:
+        print("Invalid input. Please enter a valid option (1 or 2).")
+
+def get_option_analysis():
+  while True:
+    option = input("Would use like to use historical (1) or document-based (2) analysis: ")
+
+    if option == "1":
+        return citation_historical
+    elif option == '2':
+        return citation_documents
+    else:
+        print("Invalid input. Please enter a valid option (1 or 2).")
+
+  
 def create_search(search_keys):
   search_string = ""
   previous = False
@@ -47,6 +90,7 @@ def create_search(search_keys):
   
   return search_string
 
+
 def print_authors(authors):
   num = 1
   print()
@@ -60,7 +104,12 @@ def print_authors(authors):
       info.append(sanitize(getattr(author, field)))
     
     print_info(info, num)
-    num = num + 1 
+    num = num + 1
+
+
+def s_to_u(s):
+  return s.replace(" ", "_")
+
 
 def get_index(authors):
   val = 0
@@ -83,8 +132,21 @@ def get_index(authors):
   
   return val
 
+
+def file_write(data):
+  with open('output.txt', 'w') as file:
+    for tuple in data:
+      (year, h, cites) = tuple
+
+      file.write(str(year) + " ")
+      file.write(str(h) + " ")
+      file.write(str(cites) + "\n")
+    
+    file.write("Done\n\n")
+
+
 def end_to_end():
-  search_keys = get_search()
+  search_keys = get_option_authors()
   search_texts = ["AUTHFIRST", "AUTHLAST", "AFFIL"]
 
   for i in range(len(search_keys)):
@@ -101,21 +163,16 @@ def end_to_end():
   au = authors[int(get_index(authors)) - 1]
 
   auth = AuthorRetrieval(au.eid)
-  data = citation.analyze(auth)
 
-  with open('output.txt', 'w') as file:
-    for tuple in data:
-      (year, h, cites) = tuple
+  analyzer = get_option_analysis()
+  data = analyzer.analyze(auth)
 
-      file.write(str(year) + " ")
-      file.write(str(h) + " ")
-      file.write(str(cites) + "\n")
-    
-    file.write("Done\n\n")
+  file_write(data)
 
-  print("\nFile Writing Complete")
-  citation.plot_data(data, auth.given_name + " " + auth.surname)
-  print("Plotting Complete")
+  author_name = sanitize(s_to_u(auth.given_name)) + "_" + sanitize(s_to_u(auth.surname))
+  plotter.plot_data(data, author_name)
+  os.system("open " + author_name + ".png")
+  
 
 if __name__ == "__main__":
   end_to_end()
