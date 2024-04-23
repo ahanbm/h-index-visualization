@@ -1,1 +1,5 @@
 output.txt
+__pycache__
+test.py
+*.png
+.DS_Store
