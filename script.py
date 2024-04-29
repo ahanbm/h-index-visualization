@@ -145,7 +145,7 @@ def s_to_u(s):
 
 def is_integer(s):
     try:
-        int_value = int(s)
+        int(s)
         return True
     except ValueError:
         return False
@@ -177,7 +177,7 @@ def get_index(authors, author_number):
 
 
 def file_write(data):
-  with open('output.txt', 'w') as file:
+  with open('data.txt', 'w') as file:
     for tuple in data:
       (year, h, cites) = tuple
 
