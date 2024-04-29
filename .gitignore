@@ -1,5 +1,6 @@
-output.txt
-__pycache__
-test.py
-*.png
 .DS_Store
+__pycache__/
+data.txt
+*.png
+!example.png
+author.json
