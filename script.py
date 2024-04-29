@@ -54,12 +54,12 @@ def get_search():
 
 def get_option_authors():
   while True:
-    option = input("Would you like to input information through standard input (1) or authors.json (2): ")
+    option = input("Would you like to input information through standard input (1) or author.json (2): ")
 
     if option == "1":
         return get_search()
     elif option == '2':
-        return read_author_info("authors.json")
+        return read_author_info("author.json")
     else:
         print("Invalid input. Please enter a valid option (1 or 2).")
 

@@ -71,17 +71,29 @@ def process_cites(years_list, min_year, max_year):
     
     for year in reversed(years_list): 
         if year in year_counts:
-            year_counts[year] += 1 
+            year_counts[year] += 1
     
     return year_counts
 
 
+def safe_max(cites):
+  if cites:
+    return max(cites)
+  else:
+    return 0
+
+
 def compute(range_pubs, overall_cites):
   (start, end) = range_pubs
+  initial_cites = []
   ordered_cites = []
 
   for cites in overall_cites:
     cites = date_cites(cites, cites)
+    end = max(end, safe_max(cites))
+    initial_cites.append(cites)
+
+  for cites in initial_cites:
     cites = process_cites(cites, start, end)
     ordered_cites.append(cites)
   
