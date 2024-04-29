@@ -33,4 +33,4 @@ def plot_data(data, name):
     plt.subplots_adjust(top=0.90)
 
     plt.grid(True)
-    plt.savefig(name + ".png", dpi=300)
+    plt.savefig("images/" + name + ".png", dpi=300)

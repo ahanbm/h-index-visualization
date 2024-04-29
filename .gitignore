@@ -2,5 +2,6 @@ output.txt
 __pycache__
 test.py
 *.png
+!example.png
 .DS_Store
-authors.json
+author.json
