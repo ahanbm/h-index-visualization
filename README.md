@@ -35,7 +35,7 @@ to use standard input, and any other value to solicit the user's preference.
 
 Similarly, use_historical_analysis should be set to 'y' to use historical
 analysis (explained in next section), 'n' to use document analysis, and any
-other value to solicitht user's preference.
+other value to solicit the user's preference.
 
 When possible authors to be analyzed are printed, the user has an option to
 select which one.

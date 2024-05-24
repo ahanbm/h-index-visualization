@@ -29,9 +29,14 @@ def h_index(overall_cites, year, citations):
 def get_cites(docs): 
   overall_cites = []
 
-  for doc in docs:    
-    search_results = ScopusSearch(f"ref({doc.eid})")
+  for doc in docs:
     cites = []
+
+    if doc.citedby_count == 0:
+      overall_cites.append(cites)
+      continue
+    
+    search_results = ScopusSearch(f"ref({doc.eid})")
 
     if not search_results.results:
       overall_cites.append(cites)
